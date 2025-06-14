@@ -138,7 +138,7 @@
 
     <div class="controls">
       <button id="langBtn">English</button>
-      <button id="themeBtn">🌙 ダークモード</button>
+      <button id="themeBtn">🌙 Dark Mode</button>
     </div>
 
     <div class="zones">
@@ -192,7 +192,7 @@
       currentTheme = currentTheme === 'light' ? 'dark' : 'light';
       document.body.classList.remove('theme-light', 'theme-dark');
       document.body.classList.add(`theme-${currentTheme}`);
-      document.getElementById('themeBtn').textContent = currentTheme === 'light' ? '🌙 ダークモード' : '☀️ ライトモード';
+      document.getElementById('themeBtn').textContent = currentTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
     });
 
     function updateZones() {
@@ -213,12 +213,12 @@
             timeZoneName: 'short'
           });
 
-          const formatterDate = new Intl.DateTimeFormat('ja-JP', {
+          const formatterDate = new Intl.DateTimeFormat(currentLang === 'ja' ? 'ja-JP' : 'en-US', {
             timeZone: tz,
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-            weekday: 'short'
+            weekday: currentLang === 'ja' ? 'short' : 'long'
           });
 
           const parts = formatterTime.formatToParts(currentUtc);

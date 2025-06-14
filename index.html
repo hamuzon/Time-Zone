@@ -3,197 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>タイム・ゾーン時計 / Time Zone Clock</title>
+  <title>タイム・ゾーン時計</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --bg-light: #f4fdf6;
+      --card-light: #d9efe0;
+      --text-light: #1a3d2f;
+
+      --bg-dark: #1a1a1a;
+      --card-dark: #2a2a2a;
+      --text-dark: #e0fbe9;
     }
 
-    html, body {
-      min-height: 100vh;
-      width: 100vw;
-      overflow-x: hidden;
+    body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 2rem;
+      justify-content: start;
+      min-height: 100vh;
       transition: background 0.3s, color 0.3s;
     }
 
-    body.theme-light {
-      background: linear-gradient(135deg, #d9ead3, #e7f1e9);
-      color: #1a3d2f;
+    .theme-light {
+      background: var(--bg-light);
+      color: var(--text-light);
     }
 
-    body.theme-dark {
-      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-      color: #eeeeee;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 960px;
+    .theme-dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
     }
 
     h1 {
       font-size: 2.2rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       text-align: center;
-      color: inherit;
+    }
+
+    .button-row {
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #4caf50;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #45a049;
     }
 
     .zones {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
     }
 
     .zone-card {
       border-radius: 12px;
-      padding: 1.5rem 2rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      padding: 1.5rem;
       text-align: center;
-      width: 100%;
-      max-width: 440px;
-      min-height: 180px;
-      transition: background-color 0.3s, color 0.3s;
+      transition: background 0.3s, color 0.3s;
     }
 
-    body.theme-light .zone-card {
-      background-color: #c3e0c8;
-      color: #1a3d2f;
+    .theme-light .zone-card {
+      background-color: var(--card-light);
+      color: var(--text-light);
     }
 
-    body.theme-dark .zone-card {
-      background-color: #333c33;
-      color: #eeeeee;
+    .theme-dark .zone-card {
+      background-color: var(--card-dark);
+      color: var(--text-dark);
     }
 
     .zone-name {
-      font-size: 1.4rem;
-      margin-bottom: 0.2rem;
-      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
     }
 
-    .zone-offset {
+    .zone-offset, .date {
       font-size: 1rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .date {
-      font-size: 1rem;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     .time {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-family: monospace;
       font-weight: bold;
     }
 
-    .controls {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .controls button {
-      background: #88b88a;
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      margin: 0 0.5rem;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .controls button:hover {
-      background: #6fa46e;
-    }
-
-    @media screen and (max-width: 768px) {
-      .zones {
-        grid-template-columns: 1fr;
-      }
-
-      .zone-card {
-        padding: 1rem 1.5rem;
-        min-height: 140px;
-      }
-
+    @media (max-width: 600px) {
       .time {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
       }
     }
   </style>
 </head>
 <body class="theme-light">
-  <div class="container">
-    <h1 id="main-title">タイム・ゾーン時計</h1>
+  <h1 id="main-title">タイム・ゾーン時計</h1>
+  <div class="button-row">
+    <button id="langBtn">English</button>
+    <button id="themeBtn">🌙 ダークモード</button>
+  </div>
 
-    <div class="controls">
-      <button id="langBtn">English</button>
-      <button id="themeBtn">🌙 Dark Mode</button>
+  <div class="zones">
+    <div class="zone-card" data-timezone="Asia/Tokyo" data-title-ja="日本 (東京)" data-title-en="Japan (Tokyo)">
+      <div class="zone-name">日本 (東京)</div>
+      <div class="zone-offset"></div>
+      <div class="date"></div>
+      <div class="time"></div>
     </div>
-
-    <div class="zones">
-      <div class="zone-card" data-timezone="Asia/Tokyo" data-title-ja="日本 (Tokyo)" data-title-en="Japan (Tokyo)">
-        <h2 class="zone-name">日本 (Tokyo)</h2>
-        <div class="zone-offset"></div>
-        <div class="date"></div>
-        <div class="time"></div>
-      </div>
-      <div class="zone-card" data-timezone="America/Los_Angeles" data-title-ja="Google / Apple / Microsoft（カリフォルニア）" data-title-en="California (Google / Apple / Microsoft)">
-        <h2 class="zone-name">Google / Apple / Microsoft（カリフォルニア）</h2>
-        <div class="zone-offset"></div>
-        <div class="date"></div>
-        <div class="time"></div>
-      </div>
-      <div class="zone-card" data-timezone="America/New_York" data-title-ja="トロント / MIT（東部時間）" data-title-en="Toronto / MIT (Eastern Time)">
-        <h2 class="zone-name">トロント / MIT（東部時間）</h2>
-        <div class="zone-offset"></div>
-        <div class="date"></div>
-        <div class="time"></div>
-      </div>
-      <div class="zone-card" data-timezone="Etc/UTC" data-title-ja="グリニッジ標準時 (UTC)" data-title-en="Greenwich Mean Time (UTC)">
-        <h2 class="zone-name">グリニッジ標準時 (UTC)</h2>
-        <div class="zone-offset"></div>
-        <div class="date"></div>
-        <div class="time"></div>
-      </div>
+    <div class="zone-card" data-timezone="America/Los_Angeles" data-title-ja="アメリカ西海岸（ロサンゼルス）" data-title-en="US West Coast (Los Angeles)">
+      <div class="zone-name">アメリカ西海岸（ロサンゼルス）</div>
+      <div class="zone-offset"></div>
+      <div class="date"></div>
+      <div class="time"></div>
+    </div>
+    <div class="zone-card" data-timezone="America/New_York" data-title-ja="アメリカ東部（ニューヨーク）" data-title-en="US East Coast (New York)">
+      <div class="zone-name">アメリカ東部（ニューヨーク）</div>
+      <div class="zone-offset"></div>
+      <div class="date"></div>
+      <div class="time"></div>
+    </div>
+    <div class="zone-card" data-timezone="Etc/UTC" data-title-ja="世界標準時 (UTC)" data-title-en="Universal Time (UTC)">
+      <div class="zone-name">世界標準時 (UTC)</div>
+      <div class="zone-offset"></div>
+      <div class="date"></div>
+      <div class="time"></div>
     </div>
   </div>
 
   <script>
-    let currentLang = 'ja';
-    let currentTheme = 'light';
     let baseUtc = new Date(new Date().toISOString());
     let startTime = new Date();
-
-    // 言語切り替え
-    document.getElementById('langBtn').addEventListener('click', () => {
-      currentLang = currentLang === 'ja' ? 'en' : 'ja';
-      document.getElementById('langBtn').textContent = currentLang === 'ja' ? 'English' : '日本語';
-      document.getElementById('main-title').textContent = currentLang === 'ja' ? 'タイム・ゾーン時計' : 'Time Zone Clock';
-
-      document.querySelectorAll('.zone-card').forEach(card => {
-        const title = currentLang === 'ja' ? card.dataset.titleJa : card.dataset.titleEn;
-        card.querySelector('.zone-name').textContent = title;
-      });
-    });
-
-    // テーマ切り替え
-    document.getElementById('themeBtn').addEventListener('click', () => {
-      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-      document.body.classList.remove('theme-light', 'theme-dark');
-      document.body.classList.add(`theme-${currentTheme}`);
-      document.getElementById('themeBtn').textContent = currentTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
-    });
+    let currentLang = 'ja';
+    let currentTheme = 'light';
 
     function updateZones() {
       const now = new Date();
@@ -204,7 +162,7 @@
         const tz = card.dataset.timezone;
 
         try {
-          const formatterTime = new Intl.DateTimeFormat('ja-JP', {
+          const timeFormatter = new Intl.DateTimeFormat(currentLang === 'ja' ? 'ja-JP' : 'en-US', {
             timeZone: tz,
             hour: '2-digit',
             minute: '2-digit',
@@ -213,41 +171,57 @@
             timeZoneName: 'short'
           });
 
-          const formatterDate = new Intl.DateTimeFormat(currentLang === 'ja' ? 'ja-JP' : 'en-US', {
+          const dateFormatter = new Intl.DateTimeFormat(currentLang === 'ja' ? 'ja-JP' : 'en-US', {
             timeZone: tz,
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-            weekday: currentLang === 'ja' ? 'short' : 'long'
+            weekday: 'short'
           });
 
-          const parts = formatterTime.formatToParts(currentUtc);
-          const timeParts = parts.filter(p => p.type !== 'timeZoneName');
-          const timeStr = timeParts.map(p => p.value).join('');
+          const parts = timeFormatter.formatToParts(currentUtc);
+          const timeStr = parts.filter(p => p.type !== 'timeZoneName').map(p => p.value).join('');
           const tzAbbr = parts.find(p => p.type === 'timeZoneName')?.value || '';
 
           card.querySelector('.time').textContent = timeStr;
-          card.querySelector('.date').textContent = formatterDate.format(currentUtc);
+          card.querySelector('.date').textContent = dateFormatter.format(currentUtc);
           card.querySelector('.zone-offset').textContent = tzAbbr;
         } catch {
-          card.querySelector('.time').textContent = '不明なタイムゾーン';
+          card.querySelector('.time').textContent = 'N/A';
           card.querySelector('.date').textContent = '';
           card.querySelector('.zone-offset').textContent = '';
         }
       });
     }
 
-    function initClock() {
-      const now = new Date();
-      const msToNextSecond = 1000 - now.getMilliseconds();
-
-      setTimeout(() => {
-        updateZones();
-        setInterval(updateZones, 1000);
-      }, msToNextSecond);
+    function updateThemeButtonLabel() {
+      const isDark = currentTheme === 'dark';
+      document.getElementById('themeBtn').textContent =
+        currentLang === 'ja'
+          ? (isDark ? '☀️ ライトモード' : '🌙 ダークモード')
+          : (isDark ? '☀️ Light Mode' : '🌙 Dark Mode');
     }
 
-    initClock();
+    document.getElementById('langBtn').addEventListener('click', () => {
+      currentLang = currentLang === 'ja' ? 'en' : 'ja';
+      document.getElementById('langBtn').textContent = currentLang === 'ja' ? 'English' : '日本語';
+      document.getElementById('main-title').textContent = currentLang === 'ja' ? 'タイム・ゾーン時計' : 'Time Zone Clock';
+      document.querySelectorAll('.zone-card').forEach(card => {
+        const title = currentLang === 'ja' ? card.dataset.titleJa : card.dataset.titleEn;
+        card.querySelector('.zone-name').textContent = title;
+      });
+      updateThemeButtonLabel();
+    });
+
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.body.className = `theme-${currentTheme}`;
+      updateThemeButtonLabel();
+    });
+
+    // スタート
+    updateZones();
+    setInterval(updateZones, 1000);
   </script>
 </body>
 </html>
